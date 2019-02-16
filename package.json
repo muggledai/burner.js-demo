@@ -1,0 +1,8 @@
+{
+  "name": "burner.js-demo",
+  "version": "0.1.0",
+  "description": "ETH Denver 2019 submission for burner.js demo.",
+  "author": "rob shaw <rob@borwahs.com>",
+  "license": "MIT",
+  "private": false
+}
