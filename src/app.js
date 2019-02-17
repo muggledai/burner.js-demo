@@ -10,19 +10,22 @@ import ExternalWindowPortal from './components/ExternalWindowPortal';
 
 /** HARDCODED **/
 const REDIRECT_URL = 'http://localhost:5555';
-const SOURCE = 'merchant';
 const ADDRESS = 'abcd1234';
-const AMOUNT = 5;
+
+const COMPANY_LOGO_URL = "http://flavorwire.files.wordpress.com/2011/08/office.jpeg?w=1920";
+const COMPANY_NAME = "Dunder Mifflin";
+const BASE_COMPANY_TX_ID = "12231";
 
 /** Definitions **/
 class App extends React.Component {
     state = {
         showExternalDaiWindow: false,
         transactionStatus: null,
+        currentTransactionId: BASE_COMPANY_TX_ID,
     };
 
     closeWindow = () => this.setState({ showExternalDaiWindow: false });
-    addToBalanceHandler = () => {
+    payWithBurnerHandler = () => {
         this.setState({
             showExternalDaiWindow: true,
             transactionStatus: 'Having user confirm transaction in burner wallet.',
@@ -36,14 +39,17 @@ class App extends React.Component {
         });
     }
 
-    redirectOnLoad = (redirectUrl, source, address, amount) => {
+    redirectOnLoad = (redirectUrl, address) => {
 
         const qsparams = {
             burnerjs: true,
             redirectBack: redirectUrl,
-            source,
             address,
-            amount,
+            companyLogoUrl: COMPANY_LOGO_URL,
+            companyName: COMPANY_NAME,
+            companyTxId: this.state.currentTransactionId,
+            transactionDateTime: new Date(),
+            total: 14.50,
         };
 
         return `http://localhost:3000?${querystring.stringify(qsparams)}`;
@@ -65,8 +71,8 @@ class App extends React.Component {
         queryStringParams = querystring.parse(queryStringParams);
 
         let transactionStatus = null;
-        if (queryStringParams && queryStringParams.action === 'close' && queryStringParams.status === 'noop') {
-            transactionStatus = 'User exited burner wallet before confirming transaction.';
+        if (queryStringParams && queryStringParams.action === 'cancel' && queryStringParams.status === 'noop') {
+            transactionStatus = 'User cancelled payment';
         }
 
         this.setState({
@@ -102,18 +108,29 @@ class App extends React.Component {
             return 'Returning back to merchant.';
         }
 
-        const addBalanceButtonTitle = this.state.showExternalDaiWindow ? 'Cancel Transaction' : 'Add to Balance';
+        const payWithBurnerButtonTitle = this.state.showExternalDaiWindow ? 'Cancel Transaction' : 'Pay with Burner';
 
         return (
-            <div>
-                <h1>Merchant</h1>
-                <div>Amount to spend: {AMOUNT}</div>
-                <div>Merchant Address: {ADDRESS}</div>
-                <button
-                    onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.addToBalanceHandler}
-                >
-                    {addBalanceButtonTitle}
-                </button>
+            <div style={{
+                width: '100%',
+                maxWidth: '400px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <div>
+                    <img src={COMPANY_LOGO_URL} width="325px"/>
+                </div>
+                <div style={{
+                    padding: '20px 0',
+                }}>
+                    <button
+                        onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
+                    >
+                        {payWithBurnerButtonTitle}
+                    </button>
+                </div>
 
                 {this.state.transactionStatus && (
                     <div style={{ marginTop: '20px'}}>
@@ -129,7 +146,7 @@ class App extends React.Component {
                         <ExternalWindowPortal
                             onClose={this.closeWindow}
                             redirectOnLoad={() => {
-                                return this.redirectOnLoad(REDIRECT_URL, SOURCE, ADDRESS, AMOUNT);
+                                return this.redirectOnLoad(REDIRECT_URL, ADDRESS);
                             }}
                         >
                             <div>Loading xdai.io</div>
