@@ -22,6 +22,7 @@ class App extends React.Component {
         showExternalDaiWindow: false,
         transactionStatus: null,
         currentTransactionId: BASE_COMPANY_TX_ID,
+        costValue: 0.0,
     };
 
     closeWindow = () => this.setState({ showExternalDaiWindow: false });
@@ -29,6 +30,12 @@ class App extends React.Component {
         this.setState({
             showExternalDaiWindow: true,
             transactionStatus: 'Having user confirm transaction in burner wallet.',
+        });
+    }
+
+    onCostValueChange = (e) => {
+        this.setState({
+            costValue: e.target.value,
         });
     }
 
@@ -41,6 +48,17 @@ class App extends React.Component {
 
     redirectOnLoad = (redirectUrl, address) => {
 
+        let total = null;
+
+        try {
+            total = parseFloat(this.state.costValue);
+        } catch (e) {
+            this.setState({
+                transactionStatus: 'Not a valid amount',
+            });
+            return;
+        }
+
         const qsparams = {
             burnerjs: true,
             redirectBack: redirectUrl,
@@ -49,7 +67,7 @@ class App extends React.Component {
             companyName: COMPANY_NAME,
             companyTxId: this.state.currentTransactionId,
             transactionDateTime: new Date(),
-            total: 14.50,
+            total,
         };
 
         return `http://localhost:3000?${querystring.stringify(qsparams)}`;
@@ -122,6 +140,17 @@ class App extends React.Component {
                 <div>
                     <img src={COMPANY_LOGO_URL} width="325px"/>
                 </div>
+
+                <div style={{
+                    padding: '10px 0 0 0',
+                }}>
+                    <input
+                        value={this.state.costValue}
+                        disabled={this.state.showExternalDaiWindow}
+                        onChange={this.onCostValueChange}
+                    />
+                </div>
+
                 <div style={{
                     padding: '20px 0',
                 }}>
