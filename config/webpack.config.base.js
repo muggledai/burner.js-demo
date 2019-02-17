@@ -3,12 +3,21 @@ const path = require('path');
 
 /** Third Party **/
 const webpack = require('webpack')
+const dotEnvWebpack = require('dotenv-webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+
+const environment = `${process.env.NODE_ENV || 'development'}`;
 
 /** Plugin Setup **/
 const buildExample = new HtmlWebPackPlugin({
     template: './example.html',
     inject: true,
+});
+
+const dotenvPlugin = new dotEnvWebpack({
+    path: `./.env.${environment}`,
+    safe: true,
+    silent: true,
 });
 
 /** Configuration **/
@@ -34,5 +43,5 @@ module.exports = {
             },
         ],
     },
-    plugins: [buildExample],
+    plugins: [dotenvPlugin, buildExample],
 }
