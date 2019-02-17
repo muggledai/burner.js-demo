@@ -10,11 +10,12 @@ import ExternalWindowPortal from './components/ExternalWindowPortal';
 
 /** HARDCODED **/
 const REDIRECT_URL = 'http://localhost:5555';
-const ADDRESS = 'abcd1234';
 
 const COMPANY_LOGO_URL = "http://flavorwire.files.wordpress.com/2011/08/office.jpeg?w=1920";
 const COMPANY_NAME = "Dunder Mifflin";
 const BASE_COMPANY_TX_ID = "12231";
+
+const COMPANY_ADDRESS = process.env.MERCHANT_ADDRESS;
 
 /** Definitions **/
 class App extends React.Component {
@@ -46,7 +47,7 @@ class App extends React.Component {
         });
     }
 
-    redirectOnLoad = (redirectUrl, address) => {
+    redirectOnLoad = () => {
 
         let total = null;
 
@@ -61,8 +62,8 @@ class App extends React.Component {
 
         const qsparams = {
             burnerjs: true,
-            redirectBack: redirectUrl,
-            address,
+            redirectBack: REDIRECT_URL,
+            address: COMPANY_ADDRESS,
             companyLogoUrl: COMPANY_LOGO_URL,
             companyName: COMPANY_NAME,
             companyTxId: this.state.currentTransactionId,
@@ -174,9 +175,7 @@ class App extends React.Component {
                     this.state.showExternalDaiWindow && (
                         <ExternalWindowPortal
                             onClose={this.closeWindow}
-                            redirectOnLoad={() => {
-                                return this.redirectOnLoad(REDIRECT_URL, ADDRESS);
-                            }}
+                            redirectOnLoad={this.redirectOnLoad}
                         >
                             <div>Loading xdai.io</div>
                         </ExternalWindowPortal>
