@@ -10,6 +10,7 @@ import ExternalWindowPortal from './components/ExternalWindowPortal';
 
 /** Assets **/
 import pwaImg from '../pwa.png';
+import burnerwallet from '../burnerwallet.png';
 
 /** HARDCODED **/
 const REDIRECT_URL = 'http://localhost:5555';
@@ -158,14 +159,24 @@ class App extends React.Component {
                 <div style={{
                     padding: '20px 0',
                 }}>
-                    <div>
+                    <div style={{ padding: '5px 0'}}>
                         <button
+                            style={{
+                                backgroundImage: 'linear-gradient(rgb(41, 41, 41), rgb(25, 25, 25))',
+                                color: '#fff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                                fontSize: '17px',
+                                padding: '10px 15px',
+                            }}
                             onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
                         >
-                            {payWithBurnerButtonTitle}
+                            <img src={burnerwallet} width="20px" />
+                            <span style={{paddingLeft: '10px'}}>{payWithBurnerButtonTitle}</span>
                         </button>
                     </div>
-                    <div>
+                    <div style={{ padding: '5px 0'}}>
                         <img src={pwaImg} width="180px"/>
                     </div>
                 </div>
