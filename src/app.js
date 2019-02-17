@@ -10,6 +10,7 @@ import ExternalWindowPortal from './components/ExternalWindowPortal';
 
 /** Assets **/
 import pwaImg from '../pwa.png';
+import checkmarkImg from '../checkmark.jpeg';
 import burnerwallet from '../burnerwallet.png';
 
 /** HARDCODED **/
@@ -26,6 +27,8 @@ class App extends React.Component {
     state = {
         showExternalDaiWindow: false,
         transactionStatus: null,
+        txSuccess: false,
+        txInProgress: false,
         currentTransactionId: BASE_COMPANY_TX_ID,
         costValue: '1.50',
         showEditView: false,
@@ -34,8 +37,9 @@ class App extends React.Component {
     closeWindow = () => this.setState({ showExternalDaiWindow: false });
     payWithBurnerHandler = () => {
         this.setState({
+            txInProgress: true,
             showExternalDaiWindow: true,
-            transactionStatus: 'Having user confirm transaction in burner wallet.',
+            // transactionStatus: 'Having user confirm transaction in burner wallet.',
         });
     }
 
@@ -106,16 +110,24 @@ class App extends React.Component {
         if (queryStringParams && queryStringParams.action === 'cancel' && queryStringParams.status === 'noop') {
             transactionStatus = 'User cancelled payment';
             this.closeWindow();
+            this.setState({
+                transactionStatus,
+                txSuccess: false,
+                txInProgress: false,
+            });
         }
 
         if (queryStringParams && queryStringParams.action === 'confirm' && queryStringParams.status === 'success') {
             transactionStatus = 'Payment confirmed. Tx Hash: ' + queryStringParams.txhash;
             this.closeWindow();
+            this.setState({
+                transactionStatus,
+                txSuccess: true,
+                txInProgress: false,
+            });
         }
 
-        this.setState({
-            transactionStatus,
-        });
+
 
     }
 
@@ -236,31 +248,46 @@ class App extends React.Component {
                 <div style={{
                     padding: '20px 0',
                 }}>
-                    <div style={{ padding: '5px 0'}}>
-                        <button
-                            style={{
-                                backgroundImage: 'linear-gradient(rgb(41, 41, 41), rgb(25, 25, 25))',
-                                color: '#fff',
-                                display: 'flex',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                                fontSize: '17px',
-                                padding: '10px 15px',
-                            }}
-                            onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
-                        >
-                            <img src={burnerwallet} width="20px" />
-                            <span style={{paddingLeft: '10px'}}>{payWithBurnerButtonTitle}</span>
-                        </button>
-                    </div>
+                    {!this.state.txInProgress && this.state.txSuccess && (
+                        <div style={{ padding: '5px 0', display: 'flex'}}>
+                            <div>
+                            <img src={checkmarkImg} width="50px" />
+                            </div>
+                            <div style={{ paddingLeft: '20px', fontSize: '20px'}}>
+                                Payment has been captured. Thank you!
+                            </div>
+
+                        </div>
+                    )}
+                    {!this.state.txSuccess && (
+                        <div style={{ padding: '5px 0'}}>
+                            <button
+                                style={{
+                                    backgroundImage: 'linear-gradient(rgb(41, 41, 41), rgb(25, 25, 25))',
+                                    color: '#fff',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    fontSize: '17px',
+                                    padding: '10px 15px',
+                                }}
+                                onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
+                            >
+                                <img src={burnerwallet} width="20px" />
+                                <span style={{paddingLeft: '10px'}}>{payWithBurnerButtonTitle}</span>
+                            </button>
+                        </div>
+                    )}
+                    {!this.state.txInProgress && !this.state.txSuccess && (
                     <div style={{ padding: '5px 0'}}>
                         <img src={pwaImg} width="180px"/>
                     </div>
+                    )}
                 </div>
 
                 {this.state.transactionStatus && (
-                    <div style={{ marginTop: '20px'}}>
-                        <h4>Transaction Status</h4>
+                    <div style={{ marginTop: '20px', wordBreak: 'break-all'}}>
+                        <h4>Technical Details</h4>
                         <div>
                             {this.state.transactionStatus}
                         </div>
