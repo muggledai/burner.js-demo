@@ -17,8 +17,8 @@ import burnerwallet from '../burnerwallet.png';
 /** HARDCODED **/
 const REDIRECT_URL = 'http://localhost:5555';
 
-const COMPANY_LOGO_URL = "http://flavorwire.files.wordpress.com/2011/08/office.jpeg?w=1920";
-const COMPANY_NAME = "Dunder Mifflin";
+const COMPANY_LOGO_URL = "https://vignette.wikia.nocookie.net/harrypotter/images/c/ce/Weasleys_Wizard_Wheezes.png/revision/latest?cb=20161124001602";
+const COMPANY_NAME = "Weasleys' Wizard Wheezes";
 const BASE_COMPANY_TX_ID = "12231";
 
 const COMPANY_ADDRESS = process.env.MERCHANT_ADDRESS;
@@ -171,8 +171,9 @@ class App extends React.Component {
                 alignItems: 'center',
                 margin: '0 20px',
             }}>
-                <div>
-                    <img src={COMPANY_LOGO_URL} width="325px"/>
+                <div style={{textAlign: 'center'}}>
+                    <h2>Weasleys' Wizard Wheezes </h2>
+                    <img src={COMPANY_LOGO_URL} width="185px"/>
                 </div>
 
                 <div style={{
