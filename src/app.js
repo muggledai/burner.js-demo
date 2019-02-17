@@ -27,7 +27,8 @@ class App extends React.Component {
         showExternalDaiWindow: false,
         transactionStatus: null,
         currentTransactionId: BASE_COMPANY_TX_ID,
-        costValue: 0.0,
+        costValue: '1.50',
+        showEditView: false,
     };
 
     closeWindow = () => this.setState({ showExternalDaiWindow: false });
@@ -38,9 +39,17 @@ class App extends React.Component {
         });
     }
 
+    toggleEditView = () => this.setState(currState => ({ showEditView: !currState.showEditView }));
+
     onCostValueChange = (e) => {
         this.setState({
             costValue: e.target.value,
+        });
+    }
+
+    onTxIdChange = (e) => {
+        this.setState({
+            currentTransactionId: e.target.value,
         });
     }
 
@@ -146,20 +155,82 @@ class App extends React.Component {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                margin: '0 20px',
             }}>
                 <div>
                     <img src={COMPANY_LOGO_URL} width="325px"/>
                 </div>
 
                 <div style={{
-                    padding: '10px 0 0 0',
+                    width: '100%',
+                    margin: '10px 0 0 0',
+                    padding: '30px',
+                    borderRadius: '5px',
+                    backgroundColor: '#f0f0f0',
+                    boxSizing: 'border-box',
                 }}>
-                    <input
-                        value={this.state.costValue}
-                        disabled={this.state.showExternalDaiWindow}
-                        onChange={this.onCostValueChange}
-                    />
+                    <h3 style={{ margin: 0, padding: '5px 0',}}
+                        onClick={this.toggleEditView}>
+                        Order Summary</h3>
+                    <hr />
+                    {this.state.showEditView && (<div>
+                        <h5>This is for showing dynamic usage of burner.js to burner wallet.</h5>
+                        <div style={{ padding: '5px 0', display: 'flex', fontSize: '17px', alignItems: 'center'}}>
+                        Order #: <input
+                            style={{
+                                marginLeft: '10px',
+                                border: 'none',
+                                outline: 'none',
+                                width: '70%',
+                                borderRadius: '4px',
+                                color: '#32325d',
+                                fontWeight: '400',
+                                fontSize: '17px',
+                                lineHeight: '26px',
+                                padding: '5px 20px 8px 8px',
+                                transition: 'background-color .1s ease-in,color .1s ease-in',
+                            }}
+                            value={this.state.currentTransactionId}
+                            disabled={this.state.showExternalDaiWindow}
+                            onChange={this.onTxIdChange}
+                        />
+                    </div>
+                    <div style={{ padding: '5px 0', display: 'flex', fontSize: '17px', alignItems: 'center'}}>
+                        Total: <input
+                            style={{
+                                marginLeft: '10px',
+                                border: 'none',
+                                outline: 'none',
+                                width: '70%',
+                                borderRadius: '4px',
+                                color: '#32325d',
+                                fontWeight: '400',
+                                fontSize: '17px',
+                                lineHeight: '26px',
+                                padding: '5px 20px 8px 8px',
+                                transition: 'background-color .1s ease-in,color .1s ease-in',
+                            }}
+                            value={this.state.costValue}
+                            disabled={this.state.showExternalDaiWindow}
+                            onChange={this.onCostValueChange}
+                        />
+                    </div>
+                    <hr />
+                    </div>
+                )}
+
+                <table style={{width: '100%'}}>
+                <tbody>
+                <tr>
+                <td style={{fontWeight: 'bold'}}>Order Number</td><td>{this.state.currentTransactionId}</td>
+                </tr>
+                <tr>
+                <td style={{fontWeight: 'bold'}}>Total Amount Due</td>
+                <td>${parseFloat(this.state.costValue).toFixed(2)}</td>
+                </tr>
+                </tbody>
+                </table>
                 </div>
 
                 <div style={{
