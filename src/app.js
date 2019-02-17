@@ -8,6 +8,9 @@ import querystring from 'query-string';
 /** Components **/
 import ExternalWindowPortal from './components/ExternalWindowPortal';
 
+/** Assets **/
+import pwaImg from '../pwa.png';
+
 /** HARDCODED **/
 const REDIRECT_URL = 'http://localhost:5555';
 
@@ -155,11 +158,16 @@ class App extends React.Component {
                 <div style={{
                     padding: '20px 0',
                 }}>
-                    <button
-                        onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
-                    >
-                        {payWithBurnerButtonTitle}
-                    </button>
+                    <div>
+                        <button
+                            onClick={this.state.showExternalDaiWindow ? this.cancelTransaction : this.payWithBurnerHandler}
+                        >
+                            {payWithBurnerButtonTitle}
+                        </button>
+                    </div>
+                    <div>
+                        <img src={pwaImg} width="180px"/>
+                    </div>
                 </div>
 
                 {this.state.transactionStatus && (
