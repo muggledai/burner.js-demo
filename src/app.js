@@ -10,6 +10,7 @@ import ExternalWindowPortal from './components/ExternalWindowPortal';
 
 /** Assets **/
 import pwaImg from '../pwa.png';
+import pwpImg from '../pwp.png';
 import checkmarkImg from '../checkmark.jpeg';
 import burnerwallet from '../burnerwallet.png';
 
@@ -279,8 +280,13 @@ class App extends React.Component {
                         </div>
                     )}
                     {!this.state.txInProgress && !this.state.txSuccess && (
+                        <div>
                     <div style={{ padding: '5px 0'}}>
                         <img src={pwaImg} width="180px"/>
+                    </div>
+                    <div style={{ padding: '5px 0'}}>
+                        <img src={pwpImg} width="180px"/>
+                    </div>
                     </div>
                     )}
                 </div>
