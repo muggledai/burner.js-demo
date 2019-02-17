@@ -96,12 +96,18 @@ class App extends React.Component {
         let transactionStatus = null;
         if (queryStringParams && queryStringParams.action === 'cancel' && queryStringParams.status === 'noop') {
             transactionStatus = 'User cancelled payment';
+            this.closeWindow();
+        }
+
+        if (queryStringParams && queryStringParams.action === 'confirm' && queryStringParams.status === 'success') {
+            transactionStatus = 'Payment confirmed. Tx Hash: ' + queryStringParams.txhash;
+            this.closeWindow();
         }
 
         this.setState({
             transactionStatus,
         });
-        this.closeWindow();
+
     }
 
     componentDidMount() {
